@@ -1,19 +1,31 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { StandardEditorProps } from '@grafana/data';
 import { DivPanelOptions, getDivPanelState, setDivPanelState, defaults } from './types';
 import { CodeEditor, Button } from '@grafana/ui';
 import * as buble from 'buble';
+import { css } from 'emotion';
 //import { Console, Hook, Unhook } from 'console-feed';
+
+const styles = {
+  marginRight: css`
+    margin-right: 10px;
+  `,
+  verticalSpace: css`
+    margin-top: 10px;
+    margin-bottom: 10px;
+  `,
+};
 
 export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = ({ value, onChange }) => {
   const options = value || defaults;
   const { content } = options;
 
+  const [editorContent, setEditorContent] = useState(content);
+
   const commitContent = (content: string) => {
     const transformed = buble.transform(content, {
       transforms: { dangerousTaggedTemplateString: true },
     });
-    console.log(transformed.code);
     onChange({
       ...value,
       content,
@@ -34,13 +46,13 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
     commitContent(content);
   };
 
-  const onRunClick = () => {
+  const onRunClick = useCallback(() => {
     setDivPanelState({
       ...getDivPanelState(),
       command: 'render',
     });
-    commitContent(content);
-  };
+    commitContent(editorContent);
+  }, [editorContent]);
 
   const onEditModeChange = useCallback((editMode: boolean) => {
     setDivPanelState({
@@ -58,9 +70,21 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
 
   return (
     <>
-      <CodeEditor language="javascript" width="100%" height="50vh" value={content} onSave={onSave} showLineNumbers />
-      <Button onClick={onRunClick}>Run</Button>
-      <Button onClick={onClearClick}>Clear</Button>
+      <CodeEditor
+        language="javascript"
+        width="100%"
+        height="50vh"
+        value={content}
+        onSave={onSave}
+        showLineNumbers
+        onBlur={(value) => setEditorContent(value)}
+      />
+      <div className={styles.verticalSpace}>
+        <Button onClick={onRunClick} className={styles.marginRight}>
+          Run
+        </Button>
+        <Button onClick={onClearClick}>Clear</Button>
+      </div>
       {/* <Console logs={logs} variant="dark" /> */}
     </>
   );
