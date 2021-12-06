@@ -57,7 +57,8 @@ export const defaultContent = `/**
 */
 
 const myComponent = () => {
-  return <div>Hello Div Panel</div>;
+  const { Icon } = GrafanaUI;
+  return <div><Icon name="grafana"/>Hello Div Panel</div>;
 }
 `;
 export interface DivPanelParsedHtml {
