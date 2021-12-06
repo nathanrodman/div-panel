@@ -46,8 +46,21 @@ export const defaultEditContent = `<html>
 </body>
 </html>`;
 
-export const defaultContent = `const myComponent = () => {
-  return <div>Hello Div Panel</div>;
+export const defaultContent = `/**
+* Emotion CSS is available to use in your components:
+* const myStyles = {
+*   myClass: css\`
+*     color: red;
+*   \`
+* }
+*
+* Grafana UI components are also available to use, see developers.grafana.com
+* for component documentation.
+*/
+
+const myComponent = () => {
+  const { Icon } = GrafanaUI;
+  return <div><Icon name="grafana"/>Hello Div Panel</div>;
 }
 `;
 export interface DivPanelParsedHtml {

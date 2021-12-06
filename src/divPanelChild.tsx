@@ -1,14 +1,14 @@
 import React from 'react';
 import { DivPanelChildProps } from './types';
+import { css } from 'emotion';
+import * as GrafanaUI from '@grafana/ui';
 
 export const DivPanelChild = (props: DivPanelChildProps) => {
   const { options } = props;
-  // var MyChildComponent = function () { return React.createElement( 'div', null, myComponentString ); }
-  // var myComponent = function () { return React.createElement( 'div', null, React.createElement( MyChildComponent, null ) ); }
 
-  const reactComponent = new Function(`React, ${options.exportedFn}`, `${options.transformed}; return ${options.exportedFn}`)(
-    React,
-    new Function()
-  );
+  const reactComponent = new Function(
+    `React, GrafanaUI, css, ${options.exportedFn}`,
+    `${options.transformed}; return ${options.exportedFn}`
+  )(React, GrafanaUI, css, new Function());
   return reactComponent();
 };
