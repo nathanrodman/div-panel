@@ -46,13 +46,11 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
   const commitContent = (content: string) => {
     let cleanContent = '';
     let exportedFn = '';
-    let exportedType = '';
     const parsedJS: AcornNode | undefined = jsParser.parse(content, { ecmaVersion: 'latest', sourceType: 'module' }) as AcornNode;
     if (parsedJS?.body && Array.isArray(parsedJS.body)) {
       const exportNamedDecl: AcornNode[] | undefined = parsedJS.body.filter((n: AcornNode) => n.type === 'ExportNamedDeclaration');
       const exportDefaultDecl: AcornNode[] | undefined = parsedJS.body.filter((n: AcornNode) => n.type === 'ExportDefaultDeclaration');
       if (exportNamedDecl && exportNamedDecl.length === 1) {
-        exportedType = 'ExportNamedDeclaration';
         cleanContent = content.replace('export', '');
         const idNode: AcornNode | undefined = findIdentifier(exportNamedDecl);
         if (idNode) {
