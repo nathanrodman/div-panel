@@ -54,6 +54,8 @@ export const defaultContent = `/**
 *   \`
 * }
 *
+* Grafana UI components are also available to use, see developers.grafana.com
+* for component documentation.
 */
 
 const myComponent = () => {
