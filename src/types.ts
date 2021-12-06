@@ -1,6 +1,7 @@
 import { PanelProps, PanelData } from '@grafana/data';
 import { css } from 'emotion';
 import React from 'react';
+import { Node } from 'acorn';
 
 export const defaultEditContent = `<html>
 <body>
@@ -139,3 +140,11 @@ export const divStyle = {
     height: 100%;
   `,
 };
+
+export interface AcornNode extends Node {
+  body?: AcornNode[] | AcornNode;
+  declaration?: AcornNode;
+  declarations?: AcornNode[];
+  id?: AcornNode;
+  name?: string
+}
