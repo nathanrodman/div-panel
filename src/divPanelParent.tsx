@@ -30,9 +30,7 @@ export const DivPanelParent = (props: Props) => {
 
     const parsed = parseHtml(content, error);
     if (editMode && hasEditModeFunctions(content)) {
-      return (
-        <DivPanelChild onChange={onChangeChild} options={editor} parsed={parsed} data={data} parentRef={ref} />
-      );
+      return <DivPanelChild onChange={onChangeChild} options={editor} parsed={parsed} data={data} parentRef={ref} />;
     }
 
     return (

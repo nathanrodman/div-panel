@@ -10,12 +10,21 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
   const { content } = options;
 
   const commitContent = (content: string) => {
-    const transformed = buble.transform(content);
-    console.log(transformed.code);
+    let cleanContent = '';
+    let exportedFn = '';
+    console.log("content", content);
+    const isMatch = content.match(/export\s+(var|const|let)\s+([a-zA-Z0-9]+)\s*=\s*(?:function?(.*))?\s*\(\.*?\)\s*(?:=>?(.*))?\s*\{[^\}]+\}/s);
+    if (isMatch) {
+      cleanContent = content.replace('export', '');
+      exportedFn = isMatch[2];
+    }
+    
+    const transformed = buble.transform(cleanContent);
     onChange({
       ...value,
       content,
-      transformed: transformed.code,
+      transformed: [ transformed.code ],
+      exportedFn,
     });
   };
 
