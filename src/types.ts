@@ -54,10 +54,13 @@ export const defaultContent = `/**
 *   \`
 * }
 *
+* Grafana UI components are also available to use, see developers.grafana.com
+* for component documentation.
 */
 
 const myComponent = () => {
-  return <div>Hello Div Panel</div>;
+  const { Icon } = GrafanaUI;
+  return <div><Icon name="grafana"/>Hello Div Panel</div>;
 }
 `;
 export interface DivPanelParsedHtml {
