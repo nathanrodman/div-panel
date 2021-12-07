@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { StandardEditorProps } from '@grafana/data';
-import { DivPanelOptions, getDivPanelState, setDivPanelState, defaults, AcornNode } from './types';
+import { DivPanelOptions, getDivPanelState, setDivPanelState, defaults, AcornNode, Comment } from './types';
 import { CodeEditor, Button } from '@grafana/ui';
 import * as buble from 'buble';
 import { css } from 'emotion';
@@ -44,12 +44,22 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
   const [editorContent, setEditorContent] = useState(content);
 
   const commitContent = (content: string) => {
-    let cleanContent = '';
+    let comments: Comment[] = [];
+    let cleanContent = content;
     let exportedFn = '';
     const parsedJS: AcornNode | undefined = jsParser.parse(content, {
       ecmaVersion: 'latest',
       sourceType: 'module',
+      onComment: comments,
     }) as AcornNode;
+
+    // Filter out comments incase they include strings that could break the parser
+    if (comments.length > 0) {
+      comments.forEach((comment: Comment) => {
+        cleanContent = cleanContent.replace(comment.value, '');
+      });
+    }
+
     if (parsedJS?.body && Array.isArray(parsedJS.body)) {
       const exportNamedDecl: AcornNode[] | undefined = parsedJS.body.filter(
         (n: AcornNode) => n.type === 'ExportNamedDeclaration'
@@ -58,14 +68,14 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
         (n: AcornNode) => n.type === 'ExportDefaultDeclaration'
       );
       if (exportNamedDecl && exportNamedDecl.length === 1) {
-        cleanContent = content.replace('export', '');
+        cleanContent = cleanContent.replace('export', '');
         const idNode: AcornNode | undefined = findIdentifier(exportNamedDecl);
         if (idNode) {
           exportedFn = idNode.name!;
         }
       } else if (exportDefaultDecl && exportDefaultDecl.length === 1) {
         exportedFn = exportDefaultDecl[0].declaration?.name!;
-        cleanContent = content.replace(/export\s+default.*?$/s, '');
+        cleanContent = cleanContent.replace(/export\s+default.*?$/s, '');
       }
     } else {
       throw 'Parse error';
