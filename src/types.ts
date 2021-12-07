@@ -146,5 +146,5 @@ export interface AcornNode extends Node {
   declaration?: AcornNode;
   declarations?: AcornNode[];
   id?: AcornNode;
-  name?: string
+  name?: string;
 }

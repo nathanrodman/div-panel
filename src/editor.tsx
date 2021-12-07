@@ -19,8 +19,8 @@ const styles = {
 };
 
 const findIdentifier = (nodes: AcornNode[]): AcornNode | undefined => {
-  for(var i = 0; i < nodes.length; i++) {
-    if (nodes[i].type === 'VariableDeclarator' && nodes[i].id?.type == 'Identifier') {
+  for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i].type === 'VariableDeclarator' && nodes[i].id?.type === 'Identifier') {
       return nodes[i].id;
     }
 
@@ -34,7 +34,7 @@ const findIdentifier = (nodes: AcornNode[]): AcornNode | undefined => {
   }
 
   return undefined;
-}
+};
 
 export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = ({ value, onChange }) => {
   const options = value || defaults;
@@ -46,10 +46,17 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
   const commitContent = (content: string) => {
     let cleanContent = '';
     let exportedFn = '';
-    const parsedJS: AcornNode | undefined = jsParser.parse(content, { ecmaVersion: 'latest', sourceType: 'module' }) as AcornNode;
+    const parsedJS: AcornNode | undefined = jsParser.parse(content, {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    }) as AcornNode;
     if (parsedJS?.body && Array.isArray(parsedJS.body)) {
-      const exportNamedDecl: AcornNode[] | undefined = parsedJS.body.filter((n: AcornNode) => n.type === 'ExportNamedDeclaration');
-      const exportDefaultDecl: AcornNode[] | undefined = parsedJS.body.filter((n: AcornNode) => n.type === 'ExportDefaultDeclaration');
+      const exportNamedDecl: AcornNode[] | undefined = parsedJS.body.filter(
+        (n: AcornNode) => n.type === 'ExportNamedDeclaration'
+      );
+      const exportDefaultDecl: AcornNode[] | undefined = parsedJS.body.filter(
+        (n: AcornNode) => n.type === 'ExportDefaultDeclaration'
+      );
       if (exportNamedDecl && exportNamedDecl.length === 1) {
         cleanContent = content.replace('export', '');
         const idNode: AcornNode | undefined = findIdentifier(exportNamedDecl);
@@ -64,9 +71,8 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
       throw 'Parse error';
     }
 
-    console.log("clean content", cleanContent);
     const transformed = buble.transform(cleanContent, {
-      transforms: { 
+      transforms: {
         dangerousTaggedTemplateString: true,
       },
     });
