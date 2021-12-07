@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { DivPanelChildProps } from './types';
 import { css } from 'emotion';
 import * as GrafanaUI from '@grafana/ui';
+import { PanelData } from '@grafana/data';
+
+type ComponentProps = {
+  data: PanelData;
+};
 
 export const DivPanelChild = (props: DivPanelChildProps) => {
-  const { options } = props;
+  const { options, data } = props;
 
-  const reactComponent = new Function(
+  const ReactComponent: FC<ComponentProps> = new Function(
     `React, GrafanaUI, css, ${options.exportedFn}`,
     `${options.transformed}; 
     // if (data && typeof onDivPanelDataUpdate === 'function') {
@@ -14,5 +19,5 @@ export const DivPanelChild = (props: DivPanelChildProps) => {
     // }
     return ${options.exportedFn}`
   )(React, GrafanaUI, css, new Function());
-  return reactComponent();
+  return <ReactComponent data={data} />;
 };
