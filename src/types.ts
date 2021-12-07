@@ -149,4 +149,13 @@ export interface AcornNode extends Node {
   declarations?: AcornNode[];
   id?: AcornNode;
   name?: string;
+  comments?: any;
+}
+
+export interface Comment {
+  type: string;
+  value: string;
+  start: number;
+  end: number;
+  range?: [number, number];
 }

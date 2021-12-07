@@ -14,9 +14,6 @@ export const DivPanelChild = (props: DivPanelChildProps) => {
   const ReactComponent: FC<ComponentProps> = new Function(
     `React, GrafanaUI, css, ${options.exportedFn}`,
     `${options.transformed}; 
-    // if (data && typeof onDivPanelDataUpdate === 'function') {
-    //   onDivPanelDataUpdate(data, elem);
-    // }
     return ${options.exportedFn}`
   )(React, GrafanaUI, css, new Function());
   return <ReactComponent data={data} />;
