@@ -13,6 +13,12 @@ let scriptsLoaded: Record<string, boolean> = {};
 let linksLoaded: Record<string, boolean> = {};
 let divGlobals: any = {};
 
+function createElementFromHTML<T extends HTMLElement>(htmlString: string): T {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstChild as T;
+}
+
 export const init = (elem: Element, code: HTMLScriptElement): any => {
   try {
     const f = new Function(
@@ -55,6 +61,11 @@ export const loadCSS = (elem: HTMLLinkElement): Promise<any> => {
   });
 };
 
+export const loadCSSFromString = async (htmlString: string) => {
+  const elem: HTMLLinkElement = createElementFromHTML<HTMLLinkElement>(htmlString);
+  return loadCSS(elem);
+};
+
 export const load = async (elem: HTMLScriptElement, container?: HTMLElement): Promise<any> => {
   return new Promise((resolve, reject) => {
     try {
@@ -86,6 +97,11 @@ export const load = async (elem: HTMLScriptElement, container?: HTMLElement): Pr
       reject(ex);
     }
   });
+};
+
+export const loadFromString = async (htmlString: string) => {
+  const elem: HTMLScriptElement = createElementFromHTML<HTMLScriptElement>(htmlString);
+  return load(elem);
 };
 
 export const loadModule = async (
