@@ -89,7 +89,7 @@ export const DivMonacoEditor: React.FC<StandardEditorProps<DivPanelOptions>> = (
     onChange({
       ...value,
       content,
-      transformed: [transformed.code],
+      transformed: transformed.code,
       exportedFn,
     });
   };

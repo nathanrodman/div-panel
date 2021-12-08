@@ -78,7 +78,7 @@ export interface DivPanelParsedHtml {
 export interface DivPanelOptions {
   content: string;
   exportedFn: string;
-  transformed: string[];
+  transformed: string;
   editContent: string[];
   editCss: string[];
   error?: string;
@@ -91,7 +91,7 @@ export interface DivPanelType {
 export const defaults: DivPanelOptions = {
   content: defaultContent,
   exportedFn: '',
-  transformed: [],
+  transformed: '',
   editContent: [],
   editCss: [],
 };

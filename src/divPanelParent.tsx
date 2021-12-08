@@ -33,11 +33,7 @@ export const DivPanelParent = (props: Props) => {
       return <DivPanelChild onChange={onChangeChild} options={editor} parsed={parsed} data={data} parentRef={ref} />;
     }
 
-    return (
-      <div ref={ref}>
-        <DivPanelChild onChange={onChangeChild} options={editor} parsed={parsed} data={data} parentRef={ref} />
-      </div>
-    );
+    return <DivPanelChild onChange={onChangeChild} options={editor} parsed={parsed} data={data} parentRef={ref} />;
   };
 
   return render();
